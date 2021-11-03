@@ -145,11 +145,10 @@ if __name__ == "__main__":
     while True:
 
         move = get_plr_step("Игрок 1, Введите ваш ход(выберите номер клетки, крестик - это 01): ")
-        print("ход:", move)
 
         list_pl = list_pl1
         pl = 1
-        win_check(move, list_pl1, pl)
+        win_check(move, list_pl, pl)
         if move_check(move, list_pl, pl) == pl:
             break
         else:
@@ -162,28 +161,18 @@ if __name__ == "__main__":
 
         print_field(FIELD)
 
-        move2 = int(input("Игрок 2, Введите ваш ход(выберите номер клетки, куда поставить нолик): "))
+        move = get_plr_step("Игрок 2, Введите ваш ход(выберите номер клетки, нолик - это 00): ")
 
-        while move2 not in all_moves:
-            print_field(FIELD)
-            print("такая клетка занята или отсутствует")
-            move2 = int(input("Повторите ваш ход: "))
-
-        move = move2
         list_pl = list_pl2
         pl = 2
-        if move_check(move, list_pl, pl) == 2:
-            list_pl2 = list_pl2 + [move2]
-            all_moves.remove(move2)
-            print_field(FIELD)
-            print("Игрок 2 выиграл!")
+        win_check(move, list_pl, pl)
+        if move_check(move, list_pl, pl) == pl:
             break
-
-        list_pl2 = list_pl2 + [move2]
-        all_moves.remove(move2)
+        else:
+            list_pl2 = list_pl2 + [move]
 
         if not all_moves:
-            list_pl2 = list_pl2 + [move2]
+            list_pl2 = list_pl2 + [move]
             print_field(FIELD)
             print("Игра окончена. Ничья!")
             break
