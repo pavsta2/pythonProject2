@@ -93,35 +93,37 @@ def get_field_size():         #запрос размера поля
         try:
            FIELD = int(input("Введите размер поля"))
         except ValueError:
-           print("Введите размер поля еще раз")
+           print("ошибка ввода")
         else:
             return FIELD
 
-    while True:
-        FIELD = input("Введите размер поля")
-        if not str(FIELD).isdigit():
-            print("Введите размер поля еще раз")
-        else:
-            return int(FIELD)
 
 def get_plr_step(help_text: str):      ##запрос хода и проверка ошибки
-    move = int(input(help_text))
-    if not str(move).isdigit():
-        print(help_text)
-    else:
-        while move not in all_moves:  # проверка возможности хода
-            print_field(FIELD)
-            print("такая клетка занята или отсутствует")
-            move = int(input(help_text))
-        return move
 
-#def rec_plr_step(move, list_pl, pl):     #запись хода игрока без выигрыша
+    while True:
+        try:
+           move = int(input(help_text))
+        except ValueError:
+           print("ошибка ввода")
+        else:
+            break
+
+    while move not in all_moves:  # проверка возможности хода
+        print_field(FIELD)
+        print("такая клетка занята или отсутствует")
+        move = int(input(help_text))
+
+
+
+    return move
+
+#def rec_plr_step(move, list_pl, pl):     #запись хода игрока без выигрыша вариант двух списков
  #   list_pl = list_pl + [move]
   #  all_moves.remove(move)
    # return list_pl
 
-def rec_plr_step(move, dict_list_pl, pl):     #запись хода игрока без выигрыша
-    dict_list_pl[pl] = [move]
+def rec_plr_step(move, dict_list_pl):     #запись хода игрока без выигрыша вариант словарей
+    dict_list_pl += [move]
     all_moves.remove(move)
     return dict_list_pl
 
@@ -130,12 +132,12 @@ if __name__ == "__main__":
 
     FIELD = get_field_size()
 
-    dict_list_pl = {  # todo dict, чтобы убрать списки list_pl1 и list_pl2
+    dict_list_pl = {  # новый вариант со словарем
        1: [],
        2: []
     }
 
-    #list_pl1 = []
+    #list_pl1 = []   #  старый вариант со списками
     #list_pl2 = []
 
     all_moves = all_moves_avail(FIELD)
@@ -143,16 +145,16 @@ if __name__ == "__main__":
 
     while True:
 
-        #list_pl = list_pl1
+        #list_pl = list_pl1   # старый вариант со списками
         pl = 1
 
         move = get_plr_step(f"Игрок {pl}, Введите ваш ход(выберите номер клетки, крестик - это 01): ")
 
-        dict_list_pl[pl] = rec_plr_step(move, dict_list_pl[pl], pl)
+        dict_list_pl[pl] = rec_plr_step(move, dict_list_pl[pl])
         if move_check(move, dict_list_pl[pl], pl) == pl:   #этот блок не смог поместить в функ,т.к. содерж break глоб цикла while
             print(f"Игрок {pl} выиграл!")
-            #list_pl1 = list_pl1 + [move]
-            dict_list_pl[pl] = [move]
+            #list_pl1 = list_pl1 + [move]   # старый вариант со списками ??? append почему то не работал
+            dict_list_pl[pl] += [move]
             print_field(FIELD)
             break
 
@@ -163,22 +165,21 @@ if __name__ == "__main__":
 
         print_field(FIELD)
 
-        #list_pl = list_pl2
+        #list_pl = list_pl2   # старый вариант со списками
         pl = 2
 
         move = get_plr_step(f"Игрок {pl}, Введите ваш ход(выберите номер клетки, нолик - это 00): ")
 
-        dict_list_pl[pl] = rec_plr_step(move, dict_list_pl[pl], pl)
+        dict_list_pl[pl] = rec_plr_step(move, dict_list_pl[pl])
         if move_check(move, dict_list_pl[pl], pl) == pl:
             print(f"Игрок {pl} выиграл!")
-            #list_pl2 = list_pl2 + [move]
-            dict_list_pl[pl] = [move]
+            #list_pl2 = list_pl2 + [move]   # старый вариант со списками ??? append почему то не работал
+            dict_list_pl[pl] += [move]
             print_field(FIELD)
             break
 
         if not all_moves:
-            #list_pl2 = list_pl2 + [move]
-            dict_list_pl[pl] = [move]
+            #list_pl2 = list_pl2 + [move]   # старый вариант со списками ??? append почему то не работал
             print_field(FIELD)
             print("Игра окончена. Ничья!")
             break
