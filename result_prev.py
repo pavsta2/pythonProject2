@@ -15,69 +15,69 @@ def print_field(FIELD):   #печать поля
     for i in range(1, FIELD+1):
         for j in range(1, FIELD+1):
             current_square = zero_square + j
-            if current_square in list_pl1:
+            if current_square in dict_list_pl[1]:
                 current_square = "01"
-            if current_square in list_pl2:
+            if current_square in dict_list_pl[2]:
                 current_square = "00"
             print(" ", current_square, " ", end="|")
         zero_square += 10
         print("\n", "______|" * FIELD, sep="")
 
-def move_check_hor(move, list_pl):   #проверка комбинуии по горизонтали
+def move_check_hor(move, dict_list_pl):   #проверка комбинуии по горизонтали
     kombination_hor = 1
     i = 1
     j = 1
-    while move + i in list_pl:
+    while move + i in dict_list_pl:
         kombination_hor += 1
         i = i + 1
-    while move - j in list_pl:
+    while move - j in dict_list_pl:
         kombination_hor += 1
         j = j + 1
     return kombination_hor
 
-def move_check_ver(move, list_pl):   #проверка комбинуии по вертикали
+def move_check_ver(move, dict_list_pl):   #проверка комбинуии по вертикали
     kombination_ver = 1
     i = 10
     j = 10
-    while move + i in list_pl:
+    while move + i in dict_list_pl:
         kombination_ver += 1
         i = i + 10
-    while move - j in list_pl:
+    while move - j in dict_list_pl:
         kombination_ver += 1
         j = j + 10
     return kombination_ver
 
-def move_check_diag_1(move, list_pl): #проверка комбинуии по диаг 1
+def move_check_diag_1(move, dict_list_pl): #проверка комбинуии по диаг 1
     kombination_diag_1 = 1
     i = 9
     j = 9
-    while move + i in list_pl:
+    while move + i in dict_list_pl:
         kombination_diag_1 += 1
         i = i + 9
-    while move - j in list_pl:
+    while move - j in dict_list_pl:
         kombination_diag_1 += 1
         j = j + 9
     return kombination_diag_1
 
-def move_check_diag_2(move, list_pl): #проверка комбинуии по диаг 2
+def move_check_diag_2(move, dict_list_pl): #проверка комбинуии по диаг 2
     kombination_diag_2 = 1
     i = 11
     j = 11
-    while move + i in list_pl:
+    while move + i in dict_list_pl:
         kombination_diag_2 += 1
         i = i + 11
-    while move - j in list_pl:
+    while move - j in dict_list_pl:
         kombination_diag_2 += 1
         j = j + 11
     return kombination_diag_2
 
 
-def move_check(move, list_pl, pl):   #проверка всех комбинаций
+def move_check(move, dict_list_pl, pl):   #проверка всех комбинаций
     winner = 0
-    kombination_hor = move_check_hor(move, list_pl)
-    kombination_ver = move_check_ver(move, list_pl)
-    kombination_diag_1 = move_check_diag_1(move, list_pl)
-    kombination_diag_2 = move_check_diag_2(move, list_pl)
+    kombination_hor = move_check_hor(move, dict_list_pl)
+    kombination_ver = move_check_ver(move, dict_list_pl)
+    kombination_diag_1 = move_check_diag_1(move, dict_list_pl)
+    kombination_diag_2 = move_check_diag_2(move, dict_list_pl)
     if kombination_hor == FIELD:
         winner = pl
     elif kombination_ver == FIELD:
@@ -115,52 +115,46 @@ def get_plr_step(help_text: str):      ##запрос хода и проверк
             move = int(input(help_text))
         return move
 
-def rec_plr_step(move, list_pl, pl):     #запись хода игрока
-    #if move_check(move, list_pl, pl) == pl:
-     #   print(f"Игрок {pl} выиграл!")
+#def rec_plr_step(move, list_pl, pl):     #запись хода игрока без выигрыша
+ #   list_pl = list_pl + [move]
+  #  all_moves.remove(move)
+   # return list_pl
 
-    list_pl = list_pl + [move]
+def rec_plr_step(move, dict_list_pl, pl):     #запись хода игрока без выигрыша
+    dict_list_pl[pl] = [move]
     all_moves.remove(move)
-    return list_pl
+    return dict_list_pl
 
 
 if __name__ == "__main__":
 
     FIELD = get_field_size()
 
-    #dict_list_pl = {  # todo dict, чтобы убрать списки list_pl1 и list_pl2
-       # 1: [],
-       # 2: []
-    #}
+    dict_list_pl = {  # todo dict, чтобы убрать списки list_pl1 и list_pl2
+       1: [],
+       2: []
+    }
 
-    list_pl1 = []
-    list_pl2 = []
+    #list_pl1 = []
+    #list_pl2 = []
 
     all_moves = all_moves_avail(FIELD)
     print_field(FIELD)
 
     while True:
 
-        move = get_plr_step("Игрок 1, Введите ваш ход(выберите номер клетки, крестик - это 01): ")
-
-        list_pl = list_pl1
+        #list_pl = list_pl1
         pl = 1
 
-        list_pl1 = rec_plr_step(move, list_pl, pl)
-        if move_check(move, list_pl, pl) == pl:
+        move = get_plr_step(f"Игрок {pl}, Введите ваш ход(выберите номер клетки, крестик - это 01): ")
+
+        dict_list_pl[pl] = rec_plr_step(move, dict_list_pl[pl], pl)
+        if move_check(move, dict_list_pl[pl], pl) == pl:   #этот блок не смог поместить в функ,т.к. содерж break глоб цикла while
             print(f"Игрок {pl} выиграл!")
-            list_pl1 = list_pl1 + [move]
+            #list_pl1 = list_pl1 + [move]
+            dict_list_pl[pl] = [move]
             print_field(FIELD)
             break
-
-        #if move_check(move, list_pl, pl) == pl:
-          #  list_pl1 = list_pl
-           # print_field(FIELD)
-            #print(list_pl1)
-            #print(list_pl)
-            #break
-        #else:
-         #   list_pl1 = list_pl1 + [move]
 
         if not all_moves:
             print_field(FIELD)
@@ -169,19 +163,22 @@ if __name__ == "__main__":
 
         print_field(FIELD)
 
-        move = get_plr_step("Игрок 2, Введите ваш ход(выберите номер клетки, нолик - это 00): ")
-
-        list_pl = list_pl2
+        #list_pl = list_pl2
         pl = 2
-        list_pl2 = rec_plr_step(move, list_pl, pl)
-        if move_check(move, list_pl, pl) == pl:
+
+        move = get_plr_step(f"Игрок {pl}, Введите ваш ход(выберите номер клетки, нолик - это 00): ")
+
+        dict_list_pl[pl] = rec_plr_step(move, dict_list_pl[pl], pl)
+        if move_check(move, dict_list_pl[pl], pl) == pl:
             print(f"Игрок {pl} выиграл!")
-            list_pl2 = list_pl2 + [move]
+            #list_pl2 = list_pl2 + [move]
+            dict_list_pl[pl] = [move]
             print_field(FIELD)
             break
 
         if not all_moves:
-            list_pl2 = list_pl2 + [move]
+            #list_pl2 = list_pl2 + [move]
+            dict_list_pl[pl] = [move]
             print_field(FIELD)
             print("Игра окончена. Ничья!")
             break
