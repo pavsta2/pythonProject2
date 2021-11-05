@@ -88,7 +88,7 @@ def move_check(move, list_pl, pl):   #проверка всех комбинац
         winner = pl
     return winner
 
-def get_field_size():
+def get_field_size():         #запрос размера поля
     while True:
         try:
            FIELD = int(input("Введите размер поля"))
@@ -104,7 +104,7 @@ def get_field_size():
         else:
             return int(FIELD)
 
-def get_plr_step(help_text: str):
+def get_plr_step(help_text: str):      ##запрос хода и проверка ошибки
     move = int(input(help_text))
     if not str(move).isdigit():
         print(help_text)
@@ -115,16 +115,13 @@ def get_plr_step(help_text: str):
             move = int(input(help_text))
         return move
 
-def win_check(move, list_pl, pl):
-    if move_check(move, list_pl, pl) == pl:
-        list_pl = list_pl + [move]
-        all_moves.remove(move)
-        print_field(FIELD)
-        print(f"Игрок {pl} выиграл!")
-    else:
-        list_pl = list_pl + [move]
-        all_moves.remove(move)
-    return move_check(move, list_pl, pl), list_pl, all_moves
+def rec_plr_step(move, list_pl, pl):     #запись хода игрока
+    #if move_check(move, list_pl, pl) == pl:
+     #   print(f"Игрок {pl} выиграл!")
+
+    list_pl = list_pl + [move]
+    all_moves.remove(move)
+    return list_pl
 
 
 if __name__ == "__main__":
@@ -148,11 +145,22 @@ if __name__ == "__main__":
 
         list_pl = list_pl1
         pl = 1
-        win_check(move, list_pl, pl)
+
+        list_pl1 = rec_plr_step(move, list_pl, pl)
         if move_check(move, list_pl, pl) == pl:
-            break
-        else:
+            print(f"Игрок {pl} выиграл!")
             list_pl1 = list_pl1 + [move]
+            print_field(FIELD)
+            break
+
+        #if move_check(move, list_pl, pl) == pl:
+          #  list_pl1 = list_pl
+           # print_field(FIELD)
+            #print(list_pl1)
+            #print(list_pl)
+            #break
+        #else:
+         #   list_pl1 = list_pl1 + [move]
 
         if not all_moves:
             print_field(FIELD)
@@ -165,11 +173,12 @@ if __name__ == "__main__":
 
         list_pl = list_pl2
         pl = 2
-        win_check(move, list_pl, pl)
+        list_pl2 = rec_plr_step(move, list_pl, pl)
         if move_check(move, list_pl, pl) == pl:
-            break
-        else:
+            print(f"Игрок {pl} выиграл!")
             list_pl2 = list_pl2 + [move]
+            print_field(FIELD)
+            break
 
         if not all_moves:
             list_pl2 = list_pl2 + [move]
