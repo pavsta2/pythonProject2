@@ -9,6 +9,8 @@ def all_moves_avail(FIELD):   #формирвание списка всех хо
         zero_square += 10
     return all_moves
 
+# done формирование и отрисовка поля разделены
+
 def print_field(FIELD):   #печать поля
     zero_square = 10
     print("_______" * FIELD)
@@ -16,9 +18,9 @@ def print_field(FIELD):   #печать поля
         for j in range(1, FIELD+1):
             current_square = zero_square + j
             if current_square in dict_list_pl[1]:
-                current_square = "01"
+                current_square = "01"   # это обозначает крестик (fixed)
             if current_square in dict_list_pl[2]:
-                current_square = "00"
+                current_square = "00"   # это обозначает нолик (fixed)
             print(" ", current_square, " ", end="|")
         zero_square += 10
         print("\n", "______|" * FIELD, sep="")
@@ -88,7 +90,7 @@ def move_check(move, dict_list_pl, pl):   #проверка всех комби�
         winner = pl
     return winner
 
-def get_field_size():         #запрос размера поля
+def get_field_size():         #запрос размера поля и проверка ошибки ввода
     while True:
         try:
            FIELD = int(input("Введите размер поля"))
@@ -98,7 +100,7 @@ def get_field_size():         #запрос размера поля
             return FIELD
 
 
-def get_plr_step(help_text: str):      ##запрос хода и проверка ошибки
+def get_plr_step(help_text: str):      ##запрос хода и проверка ошибки ввода
 
     while True:
         try:
@@ -113,8 +115,6 @@ def get_plr_step(help_text: str):      ##запрос хода и проверк
         print("такая клетка занята или отсутствует")
         move = int(input(help_text))
 
-
-
     return move
 
 #def rec_plr_step(move, list_pl, pl):     #запись хода игрока без выигрыша вариант двух списков
@@ -122,7 +122,7 @@ def get_plr_step(help_text: str):      ##запрос хода и проверк
   #  all_moves.remove(move)
    # return list_pl
 
-def rec_plr_step(move, dict_list_pl):     #запись хода игрока без выигрыша вариант словарей
+def rec_plr_step(move, dict_list_pl):     # DONE запись хода игрока без выигрыша вариант словарей
     dict_list_pl += [move]
     all_moves.remove(move)
     return dict_list_pl
@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
     FIELD = get_field_size()
 
-    dict_list_pl = {  # новый вариант со словарем
+    dict_list_pl = {  # done новый вариант со словарем
        1: [],
        2: []
     }
@@ -151,7 +151,7 @@ if __name__ == "__main__":
         move = get_plr_step(f"Игрок {pl}, Введите ваш ход(выберите номер клетки, крестик - это 01): ")
 
         dict_list_pl[pl] = rec_plr_step(move, dict_list_pl[pl])
-        if move_check(move, dict_list_pl[pl], pl) == pl:   #этот блок не смог поместить в функ,т.к. содерж break глоб цикла while
+        if move_check(move, dict_list_pl[pl], pl) == pl:   #этот блок не смог вынести в функ,т.к. содерж break глоб цикла while
             print(f"Игрок {pl} выиграл!")
             #list_pl1 = list_pl1 + [move]   # старый вариант со списками ??? append почему то не работал
             dict_list_pl[pl] += [move]
